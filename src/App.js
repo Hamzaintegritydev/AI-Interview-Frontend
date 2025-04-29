@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import {
   Container, Box, Typography, Button, Select, MenuItem,
   FormControl, InputLabel, TextField, Avatar, CircularProgress,
-  Card, CardContent, Chip, Divider, IconButton
+  Card, CardContent, Chip, Divider, IconButton, Grid
 } from '@mui/material';
 import {
   Mic, MicOff, Videocam, VideocamOff,
@@ -600,116 +600,294 @@ function App() {
 
       {/* Evaluation Modal */}
       {interviewComplete && evaluation && (
-        <Box sx={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          bgcolor: 'rgba(0,0,0,0.8)',
-          zIndex: 100,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center'
+  <Box sx={{
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    bgcolor: 'rgba(0,0,0,0.8)',
+    zIndex: 100,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
+  }}>
+    <Card sx={{ 
+      width: '90%', 
+      maxWidth: 900,
+      maxHeight: '90vh',
+      overflowY: 'auto'
+    }}>
+      <CardContent sx={{ p: 4 }}>
+        <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bold', mb: 3, color: '#3f51b5' }}>
+          Interview Evaluation
+        </Typography>
+        
+        {/* Header Section */}
+        <Box sx={{ 
+          display: 'flex', 
+          alignItems: 'center', 
+          mb: 4,
+          p: 3,
+          bgcolor: '#f5f5f5',
+          borderRadius: 2,
+          boxShadow: 1
         }}>
-          <Card sx={{ 
-            width: '80%', 
-            maxWidth: 800,
-            maxHeight: '90vh',
-            overflowY: 'auto'
+          <Box sx={{ flexGrow: 1 }}>
+            <Typography variant="h6">
+              <strong>Position:</strong> {jobPosition} ({experienceLevel})
+            </Typography>
+            <Typography variant="h6" sx={{ mt: 1 }}>
+              <strong>Overall Score:</strong> {evaluation.score}/10
+            </Typography>
+            <Typography variant="h6" sx={{ mt: 1 }}>
+              <strong>Recommendation:</strong> {evaluation.recommendation}
+            </Typography>
+          </Box>
+          <Box sx={{
+            width: 120,
+            height: 120,
+            borderRadius: '50%',
+            bgcolor: 
+              evaluation.score >= 8 ? '#4caf50' : 
+              evaluation.score >= 6 ? '#8bc34a' : 
+              evaluation.score >= 4 ? '#ff9800' : '#f44336',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            boxShadow: 3
           }}>
-            <CardContent>
-              <Typography variant="h5" gutterBottom sx={{ fontWeight: 'bold', mb: 3 }}>
-                Interview Evaluation
-              </Typography>
-              
-              <Box sx={{ 
-                display: 'flex', 
-                alignItems: 'center', 
-                mb: 3,
-                p: 2,
-                bgcolor: '#f5f5f5',
-                borderRadius: 2
-              }}>
-                <Box sx={{ flexGrow: 1 }}>
-                  <Typography variant="subtitle1">
-                    <strong>Position:</strong> {jobPosition} ({experienceLevel})
-                  </Typography>
-                  <Typography variant="subtitle1">
-                    <strong>Score:</strong> {evaluation.score}/10
-                  </Typography>
-                </Box>
-                <Chip 
-                  label={evaluation.score >= 7 ? "Strong Candidate" : evaluation.score >= 5 ? "Potential Candidate" : "Needs Improvement"} 
-                  color={evaluation.score >= 7 ? "success" : evaluation.score >= 5 ? "warning" : "error"}
-                  sx={{ fontWeight: 'bold' }}
-                />
-              </Box>
-              
-              <Box sx={{ mb: 3 }}>
-                <Typography variant="subtitle1" sx={{ fontWeight: 'bold', mb: 1 }}>
-                  Overall Feedback
-                </Typography>
-                <Typography>{evaluation.feedback}</Typography>
-              </Box>
-              
-              <Box sx={{ display: 'flex', gap: 3 }}>
-                <Box sx={{ flex: 1 }}>
-                  <Typography variant="subtitle1" sx={{ fontWeight: 'bold', mb: 1 }}>
-                    Strengths
-                  </Typography>
-                  <Box component="ul" sx={{ pl: 2 }}>
-                    {evaluation.strengths.map((s, i) => (
-                      <li key={i}>
-                        <Typography>{s}</Typography>
-                      </li>
-                    ))}
-                  </Box>
-                </Box>
-                
-                <Box sx={{ flex: 1 }}>
-                  <Typography variant="subtitle1" sx={{ fontWeight: 'bold', mb: 1 }}>
-                    Areas for Improvement
-                  </Typography>
-                  <Box component="ul" sx={{ pl: 2 }}>
-                    {evaluation.improvementAreas.map((a, i) => (
-                      <li key={i}>
-                        <Typography>{a}</Typography>
-                      </li>
-                    ))}
-                  </Box>
-                </Box>
-              </Box>
-              
-              <Box sx={{ mt: 3 }}>
-                <Typography variant="subtitle1" sx={{ fontWeight: 'bold', mb: 1 }}>
-                  Recommendation
-                </Typography>
-                <Typography>{evaluation.recommendation}</Typography>
-              </Box>
-              
-              <Button 
-                variant="contained" 
-                fullWidth 
-                sx={{ mt: 3 }}
-                onClick={() => {
-                  setIsSetupComplete(false);
-                  setInterviewComplete(false);
-                  setEvaluation(null);
-                  setMessages([]);
-                  setJobPosition('');
-                  setExperienceLevel('');
-                  if (stream) {
-                    stream.getTracks().forEach(track => track.stop());
-                  }
-                }}
-              >
-                Start New Interview
-              </Button>
-            </CardContent>
+            <Typography variant="h3" sx={{ color: 'white', fontWeight: 'bold' }}>
+              {evaluation.score}
+            </Typography>
+          </Box>
+        </Box>
+        
+        {/* Overall Feedback */}
+        <Box sx={{ mb: 4 }}>
+          <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2, color: '#3f51b5' }}>
+            Overall Feedback
+          </Typography>
+          <Card variant="outlined" sx={{ p: 2 }}>
+            <Typography variant="body1">{evaluation.feedback}</Typography>
           </Card>
         </Box>
-      )}
+        
+        {/* Development Plan */}
+        <Box sx={{ mb: 4 }}>
+          <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2, color: '#3f51b5' }}>
+            Development Plan
+          </Typography>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            {evaluation.developmentPlan?.map((plan, i) => (
+              <Card key={i} variant="outlined" sx={{ p: 2 }}>
+                <Box sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                  <Box sx={{ 
+                    width: 30, 
+                    height: 30, 
+                    borderRadius: '50%', 
+                    bgcolor: '#3f51b5', 
+                    color: 'white',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    mr: 2,
+                    fontWeight: 'bold'
+                  }}>
+                    {i+1}
+                  </Box>
+                  <Typography variant="body1">{plan}</Typography>
+                </Box>
+              </Card>
+            ))}
+          </Box>
+        </Box>
+        
+        <Divider sx={{ my: 4 }} />
+        
+        {/* Detailed Assessment Grid */}
+        <Grid container spacing={3} sx={{ mb: 4 }}>
+          {/* Technical Assessment */}
+          <Grid item xs={12} md={6}>
+            <Card sx={{ height: '100%' }}>
+              <CardContent>
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+                  <Typography variant="h6" color="primary" sx={{ fontWeight: 'bold' }}>
+                    Technical Skills
+                  </Typography>
+                  <Chip 
+                    label={`${evaluation.technicalAssessment?.score || 0}/10`}
+                    color={
+                      (evaluation.technicalAssessment?.score || 0) >= 7 ? "success" : 
+                      (evaluation.technicalAssessment?.score || 0) >= 5 ? "warning" : "error"
+                    }
+                  />
+                </Box>
+                <Typography variant="body2">{evaluation.technicalAssessment?.analysis}</Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+          
+          {/* Communication Assessment */}
+          <Grid item xs={12} md={6}>
+            <Card sx={{ height: '100%' }}>
+              <CardContent>
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+                  <Typography variant="h6" color="primary" sx={{ fontWeight: 'bold' }}>
+                    Communication Skills
+                  </Typography>
+                  <Chip 
+                    label={`${evaluation.communicationAssessment?.score || 0}/10`}
+                    color={
+                      (evaluation.communicationAssessment?.score || 0) >= 7 ? "success" : 
+                      (evaluation.communicationAssessment?.score || 0) >= 5 ? "warning" : "error"
+                    }
+                  />
+                </Box>
+                <Typography variant="body2">{evaluation.communicationAssessment?.analysis}</Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+          
+          {/* Cultural Fit Assessment */}
+          <Grid item xs={12} md={6}>
+            <Card sx={{ height: '100%' }}>
+              <CardContent>
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+                  <Typography variant="h6" color="primary" sx={{ fontWeight: 'bold' }}>
+                    Cultural Fit
+                  </Typography>
+                  <Chip 
+                    label={`${evaluation.culturalFitAssessment?.score || 0}/10`}
+                    color={
+                      (evaluation.culturalFitAssessment?.score || 0) >= 7 ? "success" : 
+                      (evaluation.culturalFitAssessment?.score || 0) >= 5 ? "warning" : "error"
+                    }
+                  />
+                </Box>
+                <Typography variant="body2">{evaluation.culturalFitAssessment?.analysis}</Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+          
+          {/* Problem Solving Assessment */}
+          <Grid item xs={12} md={6}>
+            <Card sx={{ height: '100%' }}>
+              <CardContent>
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+                  <Typography variant="h6" color="primary" sx={{ fontWeight: 'bold' }}>
+                    Problem Solving
+                  </Typography>
+                  <Chip 
+                    label={`${evaluation.problemSolvingAssessment?.score || 0}/10`}
+                    color={
+                      (evaluation.problemSolvingAssessment?.score || 0) >= 7 ? "success" : 
+                      (evaluation.problemSolvingAssessment?.score || 0) >= 5 ? "warning" : "error"
+                    }
+                  />
+                </Box>
+                <Typography variant="body2">{evaluation.problemSolvingAssessment?.analysis}</Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
+        
+        <Divider sx={{ my: 4 }} />
+        
+        {/* Strengths and Improvement Areas */}
+        <Box sx={{ mb: 4 }}>
+          <Grid container spacing={3}>
+            {/* Strengths */}
+            <Grid item xs={12} md={6}>
+              <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2, color: '#4caf50' }}>
+                Key Strengths
+              </Typography>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                {evaluation.strengths?.map((item, i) => (
+                  <Card key={i} variant="outlined" sx={{ p: 2 }}>
+                    <Typography variant="subtitle1" sx={{ fontWeight: 'bold', color: '#4caf50' }}>
+                      {item.strength || item}
+                    </Typography>
+                    {item.example && (
+                      <Typography variant="body2" sx={{ mt: 1, fontStyle: 'italic' }}>
+                        Example: "{item.example}"
+                      </Typography>
+                    )}
+                  </Card>
+                ))}
+              </Box>
+            </Grid>
+            
+            {/* Improvement Areas */}
+            <Grid item xs={12} md={6}>
+              <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2, color: '#f44336' }}>
+                Areas for Improvement
+              </Typography>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                {evaluation.improvementAreas?.map((item, i) => (
+                  <Card key={i} variant="outlined" sx={{ p: 2 }}>
+                    <Typography variant="subtitle1" sx={{ fontWeight: 'bold', color: '#f44336' }}>
+                      {item.area || item}
+                    </Typography>
+                    {item.example && (
+                      <Typography variant="body2" sx={{ mt: 1, fontStyle: 'italic' }}>
+                        Example: "{item.example}"
+                      </Typography>
+                    )}
+                  </Card>
+                ))}
+              </Box>
+            </Grid>
+          </Grid>
+        </Box>
+        
+        {/* Standout Moments */}
+        {evaluation.standoutMoments && evaluation.standoutMoments.length > 0 && (
+          <Box sx={{ mb: 4 }}>
+            <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2, color: '#3f51b5' }}>
+              Standout Moments
+            </Typography>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+              {evaluation.standoutMoments.map((moment, i) => (
+                <Card key={i} variant="outlined" sx={{ 
+                  p: 2, 
+                  borderLeft: '4px solid', 
+                  borderColor: moment.type === 'positive' ? '#4caf50' : moment.type === 'negative' ? '#f44336' : '#9e9e9e' 
+                }}>
+                  <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
+                    {moment.moment}
+                  </Typography>
+                  <Typography variant="body2" sx={{ mt: 1 }}>
+                    Impact: {moment.impact}
+                  </Typography>
+                </Card>
+              ))}
+            </Box>
+          </Box>
+        )}
+        
+        <Button 
+          variant="contained" 
+          fullWidth 
+          sx={{ mt: 4, py: 1.5 }}
+          onClick={() => {
+            setIsSetupComplete(false);
+            setInterviewComplete(false);
+            setEvaluation(null);
+            setMessages([]);
+            setJobPosition('');
+            setExperienceLevel('');
+            if (stream) {
+              stream.getTracks().forEach(track => track.stop());
+            }
+          }}
+        >
+          Start New Interview
+        </Button>
+      </CardContent>
+    </Card>
+  </Box>
+)}
     </Box>
   );
 }
