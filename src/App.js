@@ -189,17 +189,27 @@ function App() {
         console.error('Speech recognition error:', e.error);
         setIsListening(false);
         
-        // Try to restart after error
-        if (isInterviewActive && !interviewComplete && !isPlaying) {
-          setTimeout(startListening, 1000);
+        // Handle specific error cases
+        if (e.error === 'no-speech') {
+          console.warn("No speech detected, restarting recognition...");
+          setTimeout(startListening, 1000); // Restart after 1 second
+        } else {
+          // Restart recognition for other errors
+          if (isInterviewActive && !interviewComplete) {
+            setTimeout(() => {
+              console.log("Restarting speech recognition due to error...");
+              startListening();
+            }, 1000);
+          }
         }
       };
-
+      
       recognitionRef.current.onend = () => {
         setIsListening(false);
         
-        // Only auto-restart if we expect it to be listening and not playing audio
-        if (isInterviewActive && !interviewComplete && userInput === '' && !isPlaying) {
+        // Restart if it ends unexpectedly
+        if (isInterviewActive && !interviewComplete) {
+          console.log("Speech recognition ended, restarting...");
           setTimeout(startListening, 1000);
         }
       };
